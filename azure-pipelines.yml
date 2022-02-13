@@ -1,19 +1,17 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger:
-- main
-
-pool:
-  vmImage: ubuntu-latest
-
+# Script for Linux and macOS
+pool: { vmImage: ubuntu-latest } # or whatever pool you use
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- checkout: none
+- bash: |
+    SEARCH_PATH=$PATH  # or any colon-delimited list of paths
+    IFS=':' read -r -a PathDirs <<< "$SEARCH_PATH"
+    echo "##[debug] Found directories"
+    for element in "${PathDirs[@]}"; do
+        echo "$element"
+    done;
+    echo;
+    echo;  
+    echo "##[debug] Found files"
+    for element in "${PathDirs[@]}"; do
+        find "$element" -type f
+    done
